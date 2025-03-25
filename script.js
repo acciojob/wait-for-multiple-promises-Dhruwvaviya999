@@ -24,12 +24,20 @@ function promise3 (){
 	});	
 }
 
-Promise.all([promise1(), promise2(), promise3()]).then((values)=>{
+function promise4 (){
+	return new Promise((res, rej)=>{
+		setTimeout(()=>{
+			res({name: "Total", time: 7})
+		},3000);
+	});	
+}
+
+Promise.all([promise1(), promise2(), promise3(), promise4()]).then((values)=>{
 	let tBody = document.querySelector("#output");
 	values.forEach((value)=>{
 		tBody.innerHTML += 
 		`
-		<tr>
+		<tr id="loading">
 			<td>${value.name}</td>
 			<td>${value.time}</td>
 		</tr>
