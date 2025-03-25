@@ -8,6 +8,7 @@
         const promises = [createPromise(1), createPromise(2), createPromise(3)];
 
         const startTime = performance.now();
+console.log(startTime);
         Promise.all(promises).then(results => {
             const output = document.getElementById("output");
             output.innerHTML = ""; // Remove loading row
