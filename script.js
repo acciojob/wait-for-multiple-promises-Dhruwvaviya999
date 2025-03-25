@@ -1,48 +1,25 @@
-//your JS code here. If required.
+ function createPromise(id) {
+            let time = Math.random() * 2 + 1; // Random time between 1 and 3 seconds
+            return new Promise(resolve => {
+                setTimeout(() => resolve({ id, time: time.toFixed(3) }), time * 1000);
+            });
+        }
 
-function promise1 (){
-	return new Promise((res, rej)=>{
-		setTimeout(()=>{
-			res({name: "Promise 1", time: 2})
-		},2000);
-	});
-}
+        const promises = [createPromise(1), createPromise(2), createPromise(3)];
 
-function promise2 (){
-	return new Promise((res, rej)=>{
-		setTimeout(()=>{
-			res({name: "Promise 2", time: 2})
-		},2000);
-	});	
-}
+        const startTime = performance.now();
+        Promise.all(promises).then(results => {
+            const output = document.getElementById("output");
+            output.innerHTML = ""; // Remove loading row
 
-function promise3 (){
-	return new Promise((res, rej)=>{
-		setTimeout(()=>{
-			res({name: "Promise 3", time: 3})
-		},3000);
-	});	
-}
+            results.forEach(result => {
+                let row = document.createElement("tr");
+                row.innerHTML = `<td>Promise ${result.id}</td><td>${result.time}</td>`;
+                output.appendChild(row);
+            });
 
-function promise4 (){
-	return new Promise((res, rej)=>{
-		setTimeout(()=>{
-			res({name: "Total", time: 7})
-		},3000);
-	});	
-}
-
-Promise.all([promise1(), promise2(), promise3(), promise4()]).then((values)=>{
-	let tBody = document.querySelector("#output");
-	values.forEach((value)=>{
-		tBody.innerHTML += 
-		`
-		<tr id="loading">
-			<td>${value.name}</td>
-			<td>${value.time}</td>
-		</tr>
-		`
-	})
-})
-
-
+            const totalTime = ((performance.now() - startTime) / 1000).toFixed(3);
+            let totalRow = document.createElement("tr");
+            totalRow.innerHTML = `<td>Total</td><td>${totalTime}</td>`;
+            output.appendChild(totalRow);
+        });
