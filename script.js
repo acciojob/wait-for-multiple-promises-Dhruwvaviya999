@@ -1,26 +1,37 @@
- function createPromise(id) {
-            let time = Math.random() * 2 + 1; // Random time between 1 and 3 seconds
-            return new Promise(resolve => {
-                setTimeout(() => resolve({ id, time: time.toFixed(3) }), time * 1000);
-            });
-        }
+let loadingRow = document.querySelector("#loading");
 
-        const promises = [createPromise(1), createPromise(2), createPromise(3)];
+function createPromise(name){
+	let time = (Math.random() * 3) + 1;
+	return new Promise((res, rej) => {
+		setTimeout(()=>{
+			res({name: name, time: time});
+		},time*1000);	
+	});
+};
 
-        const startTime = performance.now();
-console.log(startTime);
-        Promise.all(promises).then(results => {
-            const output = document.getElementById("output");
-            output.innerHTML = ""; // Remove loading row
+Promise.all([createPromise("Promise 1"), createPromise("Promise 2"), createPromise("Promise 3")]).then((responses)=>{
+	loadingRow.style.display = "none";
+	let totalTime = 0;
+	responses.map((res) => {
+		totalTime += res.time;
+		document.querySelector("#output").innerHTML +=
+		`
+		<tr>
+			<td>${res.name}</td>
+			<td>${(res.time).toFixed(3)}</td>
+		</tr>
+		`;
+	})
 
-            results.forEach(result => {
-                let row = document.createElement("tr");
-                row.innerHTML = `<td>Promise ${result.id}</td><td>${result.time}</td>`;
-                output.appendChild(row);
-            });
+	document.querySelector("#output").innerHTML += 
+		`
+		<tr>
+			<td>Total</td>
+			<td>${totalTime.toFixed(3)}</td>
+		</tr>
+		`
+});
 
-            const totalTime = ((performance.now() - startTime) / 1000).toFixed(3);
-            let totalRow = document.createElement("tr");
-            totalRow.innerHTML = `<td>Total</td><td>${totalTime}</td>`;
-            output.appendChild(totalRow);
-        });
+
+
+
