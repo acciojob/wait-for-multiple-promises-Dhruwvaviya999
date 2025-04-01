@@ -10,10 +10,10 @@ function createPromise(name){
 };
 
 Promise.all([createPromise("Promise 1"), createPromise("Promise 2"), createPromise("Promise 3")]).then((responses)=>{
+
+	let maxTime = Math.max(...responses.map(res => res.time));
 	loadingRow.style.display = "none";
-	let totalTime = 0;
-	responses.map((res) => {
-		totalTime += res.time;
+	responses.forEach((res) => {
 		document.querySelector("#output").innerHTML +=
 		`
 		<tr>
@@ -27,7 +27,7 @@ Promise.all([createPromise("Promise 1"), createPromise("Promise 2"), createPromi
 		`
 		<tr>
 			<td>Total</td>
-			<td>${totalTime.toFixed(3)}</td>
+			<td>${maxTime.toFixed(3)}</td>
 		</tr>
 		`
 });
