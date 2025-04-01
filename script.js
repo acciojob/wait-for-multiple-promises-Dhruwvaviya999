@@ -1,4 +1,7 @@
 let loadingRow = document.querySelector("#loading");
+let outputDiv = document.querySelector("#output");
+
+let output = "";
 
 function createPromise(name){
 	let time = (Math.random() * 3) + 1;
@@ -9,28 +12,37 @@ function createPromise(name){
 	});
 };
 
-Promise.all([createPromise("Promise 1"), createPromise("Promise 2"), createPromise("Promise 3")]).then((responses)=>{
+async function createAndResolvePromises() {
+    let promises = [createPromise("Promise 1"), createPromise("Promise 2"), createPromise("Promise 3")];
+    let responses = await Promise.all(promises);
 
-	let maxTime = Math.max(...responses.map(res => res.time));
-	loadingRow.style.display = "none";
-	responses.forEach((res) => {
-		document.querySelector("#output").innerHTML +=
-		`
-		<tr>
-			<td>${res.name}</td>
-			<td>${(res.time).toFixed(3)}</td>
-		</tr>
-		`;
-	})
+    let maxTime = Math.max(...responses.map(res => res.time));
+    loadingRow.style.display = "none";
 
-	document.querySelector("#output").innerHTML += 
-		`
-		<tr>
-			<td>Total</td>
-			<td>${maxTime.toFixed(3)}</td>
-		</tr>
-		`
-});
+    let outputHTML = '';
+
+    responses.forEach((res) => {
+        outputHTML +=
+        `
+        <tr>
+            <td>${res.name}</td>
+            <td>${(res.time).toFixed(3)}</td>
+        </tr>
+        `;
+    })
+
+    outputHTML += 
+    `
+    <tr>
+        <td>Total</td>
+        <td>${maxTime.toFixed(3)}</td>
+    </tr>
+    `
+
+    outputDiv.innerHTML = outputHTML;
+}
+
+createAndResolvePromises();
 
 
 
